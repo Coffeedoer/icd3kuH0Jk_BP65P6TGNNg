@@ -1,10 +1,13 @@
-'use strict';
-
 (function () {
     'use strict';
     
-    var TIMEOUT = 10;
+    var TIMEOUT = 1;
+    var co = require('co');
+    var Promise = require('bluebird');
+
+    var Crawler = require('./crawler');
     var bean = require('./bean');
+    var Mongo = require('./mongo');
 
     function Consumer() {
         var _this = this;
@@ -25,8 +28,27 @@
 
             } else {
                 var seed = JSON.parse(payload);
-                _this.client.destroy(jobid, function(err) {});
-                _this.reserve();
+                
+                co(function* () {
+                    var crawler = new Crawler(seed.from, seed.to);
+                    var rate = yield crawler.start();
+                    var db = yield new Mongo().db();
+                    var collection = db.collection('exchange_rates')
+                      
+                    collection.insert({
+                        "from": seed.from,
+                        "to": seed.to,
+                        "created_at": new Date(),
+                        "rate": rate
+                    }, function(err, docs) {
+                    })
+
+                }).then(function (value) {
+                    _this.client.destroy(jobid, function(err) {});
+                    _this.reserve();
+
+                }, function (err) {
+                });
             }
         });
     }

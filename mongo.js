@@ -11,7 +11,9 @@
     Mongo.prototype.db = function () {
         var resolver = Promise.pending();
         Client.connect(MONGODB_URL, function(err, db) {
-            if(err) throw err;
+            if(err){
+            };
+
             resolver.resolve(db)
         });
 

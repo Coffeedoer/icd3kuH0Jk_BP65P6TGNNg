@@ -17,7 +17,10 @@
         var resolver = Promise.pending();
         Request(this.request_url , function (error, response, body) {
             if (!error && response.statusCode == 200) {
-                resolver.resolve(body);
+                var rate = body.split(',')[1];
+                rate = Math.round(rate * 100) /100;
+                rate = String(rate);
+                return resolver.resolve(rate);
             }
         });
         return resolver.promise;
