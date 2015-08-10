@@ -2,7 +2,7 @@
   "name": "challenge",
   "version": "1.0.0",
   "description": "",
-  "main": "main.js",
+  "consumer": "consumer.js",
   "producer": "producer.js",
   "dependencies": {
     "request": "^2.60.0",
