@@ -75,7 +75,7 @@
                     _this.client.destroy(jobid, function(err) {});                    
 
                     if (seed.fail_count < 3) {
-                        _this.client.put(0, 3, 10, JSON.stringify(payload), 
+                        _this.client.put(0, 3, 10, JSON.stringify(seed), 
                             function(err, jobid) {});
                     }
 
