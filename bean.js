@@ -8,8 +8,11 @@
     var resolver = Promise.pending();
 
     client.on('connect', function() {
-      client.use('lampercy', function(err, tubename) {});
-      resolver.resolve(client);
+        resolver.resolve(client);
+    });
+
+    client.on('error', function(err) {
+        resolver.reject(err);
     });
 
     client.connect();
