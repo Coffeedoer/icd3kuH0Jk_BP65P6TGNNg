@@ -21,7 +21,11 @@
                 rate = Math.round(rate * 100) /100;
                 rate = String(rate);
                 return resolver.resolve(rate);
+
+            } else {
+              resolver.reject(error);
             }
+
         });
         return resolver.promise;
     }
