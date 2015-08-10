@@ -29,7 +29,7 @@ co(function* () {
       "fail_count": 0
   };
 
-  bean.put(0, 0, 0, JSON.stringify(payload), function(err, jobid) {});
+  bean.put(0, 0, 10, JSON.stringify(payload), function(err, jobid) {});
   bean.quit();
 
 }).catch(function(err) {

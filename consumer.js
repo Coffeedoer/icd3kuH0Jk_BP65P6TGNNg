@@ -15,6 +15,7 @@
             _this.client = client;
             client.watch('lampercy', function(err, numwatched) {});
             client.ignore('default', function(err, numwatched) {});
+            client.use('lampercy', function(err, tubename) {});
             _this.reserve();
         });
     }
@@ -35,20 +36,34 @@
                     var db = yield new Mongo().db();
                     var collection = db.collection('exchange_rates')
                       
-                    collection.insert({
-                        "from": seed.from,
-                        "to": seed.to,
-                        "created_at": new Date(),
-                        "rate": rate
-                    }, function(err, docs) {
-                    })
 
-                }).then(function (value) {
+                    var insert = function() {
+                        var resolver = Promise.pending();
+
+                        collection.insert({
+                            "from": seed.from,
+                            "to": seed.to,
+                            "created_at": new Date(),
+                            "rate": rate
+                        }, function(err, docs) {
+                            if (err) {
+                                resolver.reject(err);
+                            } else {
+                                resolver.resolve();
+                            }
+                        })
+
+                        return resolver.promise;
+                    }
+
+                    yield insert();
+
+                }).then(function () {
                     seed.success_count++;
                     _this.client.destroy(jobid, function(err) {});
 
                     if (seed.success_count < 10) {
-                        _this.client.put(0, 60, 0, JSON.stringify(seed), 
+                        _this.client.put(0, 60, 10, JSON.stringify(seed), 
                             function(err, jobid) {});
                     }
 
@@ -59,7 +74,7 @@
                     _this.client.destroy(jobid, function(err) {});                    
 
                     if (seed.fail_count < 3) {
-                        _this.client.put(0, 3, 0, JSON.stringify(payload), 
+                        _this.client.put(0, 3, 10, JSON.stringify(payload), 
                             function(err, jobid) {});
                     }
 
