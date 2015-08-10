@@ -4,7 +4,7 @@
     var Fivebeans = require('fivebeans');
     var Promise = require('bluebird');
 
-    var client = new Fivebeans.client('localhost', 11300);
+    var client = new Fivebeans.client('challenge.aftership.net', 11300);
     var resolver = Promise.pending();
 
     client.on('connect', function() {
