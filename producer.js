@@ -4,7 +4,9 @@ var bean = require('./bean');
 
 var payload = {
     "from": "HKD",
-    "to": "USD"
+    "to": "USD",
+    "success_count": 0,
+    "fail_count": 0
 };
 
 bean.then(function(bean) {

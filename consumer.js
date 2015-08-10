@@ -44,10 +44,26 @@
                     })
 
                 }).then(function (value) {
+                    seed.success_count++;
                     _this.client.destroy(jobid, function(err) {});
+
+                    if (seed.success_count < 10) {
+                        _this.client.put(0, 60, 0, JSON.stringify(seed), 
+                            function(err, jobid) {});
+                    }
+
                     _this.reserve();
 
                 }, function (err) {
+                    seed.fail_count++;
+                    _this.client.destroy(jobid, function(err) {});                    
+
+                    if (seed.fail_count < 3) {
+                        _this.client.put(0, 3, 0, JSON.stringify(payload), 
+                            function(err, jobid) {});
+                    }
+
+                    _this.reserve();
                 });
             }
         });
