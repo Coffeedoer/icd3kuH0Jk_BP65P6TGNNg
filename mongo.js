@@ -5,16 +5,16 @@
     var Client = require('mongodb').MongoClient
     var Promise = require('bluebird');
 
-    function Mongo() {
-    }
+    function Mongo() {}
 
     Mongo.prototype.db = function () {
         var resolver = Promise.pending();
         Client.connect(MONGODB_URL, function(err, db) {
             if(err){
+                resolver.reject(err);
             };
 
-            resolver.resolve(db)
+            resolver.resolve(db);
         });
 
         return resolver.promise;
