@@ -57,6 +57,7 @@
                     }
 
                     yield insert();
+                    db.close();
 
                 }).then(function () {
                     seed.success_count++;
